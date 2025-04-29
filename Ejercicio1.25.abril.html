@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tablas Divertidas</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #fef9e7;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      color: #d35400;
+      font-size: 6vw;
+    }
+
+    #exercise {
+      font-size: 5vw;
+      margin: 20px;
+    }
+
+    #character {
+      width: 40vw;
+      max-width: 150px;
+      margin: 10px auto;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 5vw;
+      width: 40vw;
+      max-width: 150px;
+      border: 2px solid #ffa500;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #ffa500;
+      color: white;
+      padding: 10px 15px;
+      font-size: 4.5vw;
+      border: none;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    #result, #score {
+      font-size: 5vw;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .correct { color: green; }
+    .wrong { color: red; }
+
+    @media (min-width: 600px) {
+      h1 { font-size: 32px; }
+      #exercise, #result, #score { font-size: 24px; }
+      input, button { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>¡Tablas Divertidas!</h1>
+  <img id="character" src="" alt="Animal divertido" />
+  <div id="exercise"></div>
+  <input type="number" id="answer" placeholder="Tu respuesta" />
+  <br />
+  <button onclick="checkAnswer()">Comprobar</button>
+  <button onclick="newExercise()">Otro</button>
+  <div id="result"></div>
+  <div id="score"></div>
+
+  <script>
+    const characters = [
+      {
+        name: "la rana Ramona",
+        img: "https://i.imgur.com/F2H6amz.png",
+        phrase: "Ramona salta feliz cuando aciertas."
+      },
+      {
+        name: "el gato Tomás",
+        img: "https://i.imgur.com/LpaEJdi.png",
+        phrase: "Tomás dice: ¡Eso fue maullavilloso!"
+      },
+      {
+        name: "el oso Bruno",
+        img: "https://i.imgur.com/j9i2htE.png",
+        phrase: "Bruno te aplaude con sus patas peludas."
+      },
+      {
+        name: "el perrito Max",
+        img: "https://i.imgur.com/bW0FNWI.png",
+        phrase: "Max mueve la cola si respondes bien."
+      }
+    ];
+
+    let a = 0, b = 0;
+    let correctCount = parseInt(localStorage.getItem("correctCount")) || 0;
+    let totalCount = parseInt(localStorage.getItem("totalCount")) || 0;
+    let currentChar = {};
+
+    function updateScore() {
+      document.getElementById("score").textContent = `Aciertos: ${correctCount} / ${totalCount}`;
+    }
+
+    function saveScore() {
+      localStorage.setItem("correctCount", correctCount);
+      localStorage.setItem("totalCount", totalCount);
+    }
+
+    function newExercise() {
+      a = Math.floor(Math.random() * 10) + 1;
+      b = Math.floor(Math.random() * 10) + 1;
+      currentChar = characters[Math.floor(Math.random() * characters.length)];
+
+      document.getElementById("character").src = currentChar.img;
+      document.getElementById("exercise").textContent =
+        `¿Cuánto es ${a} × ${b}? Ayuda a ${currentChar.name}`;
+      document.getElementById("result").textContent = "";
+      document.getElementById("answer").value = "";
+    }
+
+    function checkAnswer() {
+      const answer = parseInt(document.getElementById("answer").value);
+      const result = document.getElementById("result");
+      totalCount++;
+
+      if (answer === a * b) {
+        correctCount++;
+        result.textContent = `🎉 ¡Correcto! ${currentChar.phrase}`;
+        result.className = "correct";
+      } else {
+        result.textContent = `❌ Ups... Era ${a * b}. Intenta otra vez.`;
+        result.className = "wrong";
+      }
+
+      updateScore();
+      saveScore();
+    }
+
+    updateScore();
+    newExercise();
+  </script>
+</body>
+</html>
